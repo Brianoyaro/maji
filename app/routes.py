@@ -11,6 +11,16 @@ def index():
     return render_template('index.html') # customize index to handle nuyers and sellers by making it uniues to each I suppose by current_user.type == 1 then buyers else seller
 
 
+@app.route('/home')
+@login_required
+def home():
+    if current_user.is_authenticated:
+        if current_user.type == '1':
+            return render_template('buyers.html', title='Home Page')
+        else:
+            return render_template('sellers.html', title='Home Page')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -26,7 +36,7 @@ def login():
         """incase app redirected to /login because of @login_required"""
         next_page = request.args.get('next')
         if not next_page:
-            next_page = url_for('index')
+            next_page = url_for('home')
         return redirect(next_page) 
     return render_template("login.html", title="Login", form=form)
 

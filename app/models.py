@@ -11,8 +11,8 @@ class Users(UserMixin, db.Model):
     phone_number = db.Column(db.String(13))
     password_hash = db.Column(db.String(128))
     type = db.Column(db.String(1))
-    orderee = db.Relationship("Order", foreign_keys='Order.buyer_name', backref='purchaser', lazy="dynamic")
-    ordered_to = db.Relationship("Order", foreign_keys='Order.seller_id', backref='seller', lazy="dynamic")
+    orderee = db.relationship("Order", foreign_keys='Order.buyer_name', backref='purchaser', lazy="dynamic")
+    ordered_to = db.relationship("Order", foreign_keys='Order.seller_id', backref='seller', lazy="dynamic")
 
     def __repr__(self):
         return "Name [{}] County [{}] Phone [{}]".format(self.username, self.county, self.phone_number)
