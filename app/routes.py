@@ -1,6 +1,6 @@
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import Users
 
@@ -15,10 +15,11 @@ def index():
 @login_required
 def home():
     if current_user.is_authenticated:
+        user = Users.query.filter_by(email=current_user.email).first()
         if current_user.type == '1':
-            return render_template('buyers.html', title='Home Page')
+            return render_template('buyers.html', title='Home Page', user=user)
         else:
-            return render_template('sellers.html', title='Home Page')
+            return render_template('sellers.html', title='Home Page', user=user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -61,3 +62,22 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('registration.html', form=form, title='Registration Page')
+
+
+@app.route('/user/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if current_user.is_authenticated:
+        user = Users.query.filter_by(email=current_user.email).first()
+        return render_template('profile.html',user=user)
+
+
+@app.route('/edit/profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        pass
+    elif request.method == 'GET':
+        pass
+    return render_template('edit_profile.html')

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+	<h1>{{ user.username }}</h1>
+	<div>
+		<h4>User Details</h4>
+		<h5>Email Address</h5>
+		<p>{{ user.email }}</p>
+		<h5>County</h5>
+		<p>{{ user.county }}</p>
+		<h5>Phone Number</h5>
+		<p>{{ user.phone_number }}</p>
+
+	</div>
+	<a href="{{ url_for("edit_profile") }}">Edit Profile</a>
+{% endblock %}
