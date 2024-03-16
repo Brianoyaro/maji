@@ -40,3 +40,10 @@ class RegistrationForm(FlaskForm):
                 raise ValidationError('Invalid phone number')
         if len(phone_number.data) > 13:
             raise ValidationError('Phone number too long')
+
+
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    county = StringField('County', validators=[DataRequired()])
+    phone_number = StringField('Phone number', validators=[DataRequired()])
+    submit = SubmitField('submit')

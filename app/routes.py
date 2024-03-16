@@ -69,7 +69,7 @@ def register():
 def profile():
     if current_user.is_authenticated:
         user = Users.query.filter_by(email=current_user.email).first()
-        return render_template('profile.html',user=user)
+        return render_template('profile.html',user=user, title='Profile Page')
 
 
 @app.route('/edit/profile', methods=['GET', 'POST'])
@@ -77,7 +77,14 @@ def profile():
 def edit_profile():
     form = EditProfileForm()
     if form.validate_on_submit():
-        pass
+        current_user.county = form.county.data
+        current_user.username = form.username.data
+        current_user.phone_number =form.phone_number.data
+        db.session.commit()
+        flash("Successfully updated profile")
+        return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
-        pass
-    return render_template('edit_profile.html')
+        form.county.data = current_user.county
+        form.username.data = current_user.username
+        form.phone_number.data = current_user.phone_number
+    return render_template('edit_profile.html', title='Profile Edit', form=form)
