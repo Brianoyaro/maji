@@ -1,8 +1,9 @@
+import requests
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
 from app.forms import LoginForm, RegistrationForm, EditProfileForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import Users
+from app.models import Users, Order
 
 
 @app.route('/')
@@ -15,11 +16,16 @@ def index():
 @login_required
 def home():
     if current_user.is_authenticated:
+        orders = Order.query.filter_by(purchaser=current_user).all()
+        key = '994ee93c240c488cafd112500240103'
+        location = current_user.county
+        url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
+        resp = requests.get(url).json()
         user = Users.query.filter_by(email=current_user.email).first()
         if current_user.type == '1':
-            return render_template('buyers.html', title='Home Page', user=user)
+            return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
         else:
-            return render_template('sellers.html', title='Home Page', user=user)
+            return render_template('sellers.html', title='Home Page', user=user, resp=resp)
 
 
 @app.route('/login', methods=['GET', 'POST'])
