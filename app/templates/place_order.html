@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Phone Number</th>
+			<th>County</th>
+		</tr>
+		{% for seller in sellers %}
+		<tr>
+			<td>{{ seller.id }}</td>
+			<td>{{ seller.username }}</td>
+			<td>{{ seller.phone_number }}</td>
+			<td>{{ seller.county }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<form action='' method='post'>
+	{{ form.hidden_tag() }}
+	<p>
+		{{ form.id.label }}<br>
+		{{ form.id() }}<br>
+		{% for error in form.id.errors %}
+		<span style="color: red">{{ error }}</span>
+		{% endfor %}
+	</p>
+	<p>{{ form.submit() }}</p>
+	</form>
+
+{% endblock %}

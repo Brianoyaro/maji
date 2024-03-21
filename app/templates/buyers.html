@@ -3,7 +3,7 @@
 	<h1>Buyers Page</h1>
 	<div style="display: inline-flex; justify-content: center; content-align: center; border: 1px solid black; background: #87CEEB; padding: 0px 40px">
 		<img src="{{ resp.get('current').get('condition').get('icon') }}">
-		<p><b>Hello</b> {{ user.username  }} the weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}</h3>
+		<p><b>Hello</b> {{ user.username  }} the weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}</p>
 	</div>
 	<div>
 		<h3>Most recent orders</h3>
@@ -16,5 +16,17 @@
 			<p><i>You have no reccent orders</i></p>
 			{% endif %}
 		</ul>
+		<p>Want to place a new order? <a href="{{ url_for("place_order", county=current_user.county) }}">Order Here</a>. You can narrow down your search by entering a filter county below:</p>
+		<form action='' method='post'>
+		{{ form.hidden_tag() }}
+		<p>
+			{{ form.county.label }}<br>
+			{{ form.county() }}<br>
+			{% for error in form.county.errors %}
+			<span style="color: red">{{ error }}</span>
+			{% endfor %}
+		</p>
+		<p>{{ form.submit() }}</p>
+		</form>
 	</div>
 {% endblock %}

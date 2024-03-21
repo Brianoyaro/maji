@@ -1,7 +1,7 @@
 import requests
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PlaceOrderForm, FilterSellersForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import Users, Order
 
@@ -23,11 +23,26 @@ def home():
         resp = requests.get(url).json()
         user = Users.query.filter_by(email=current_user.email).first()
         if current_user.type == '1':
-            return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
+            # return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
+            return redirect(url_for('buyer'))
         else:
             return render_template('sellers.html', title='Home Page', user=user, resp=resp)
 
 
+@app.route('/buyer', methods=['GET', 'POST'])
+@login_required
+def buyer():
+    if current_user.is_authenticated:
+        orders = Order.query.filter_by(purchaser=current_user).all()
+        key = '994ee93c240c488cafd112500240103'
+        location = current_user.county
+        url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
+        resp = requests.get(url).json()
+        user = Users.query.filter_by(email=current_user.email).first()
+    form = FilterSellersForm()
+    if form.validate_on_submit():
+        return redirect(url_for('place_order', county=form.county.data))
+    return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders, form=form)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -66,6 +81,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        flash("Registeration completed")
         return redirect(url_for('login'))
     return render_template('registration.html', form=form, title='Registration Page')
 
@@ -94,3 +110,24 @@ def edit_profile():
         form.username.data = current_user.username
         form.phone_number.data = current_user.phone_number
     return render_template('edit_profile.html', title='Profile Edit', form=form)
+
+
+@app.route('/order/<county>', methods=['GET', 'POST'])
+@login_required
+def place_order(county=None):
+    if county:
+        sellers = Users.query.filter_by(type=2).filter_by(county=county).all()
+    if len(sellers) == 0:
+        sellers = Users.query.filter_by(type=2).all()
+    """else:
+        sellers = Users.query.filter_by(type=2).all()"""
+    form = PlaceOrderForm()
+    if form.validate_on_submit():
+        purchaser = current_user
+        seller = Users.query.filter_by(id=int(form.id.data)).first_or_404()
+        order = Order(purchaser=purchaser, seller=seller)
+        db.session.add(order)
+        db.session.commit()
+        flash("Order placed successfully")
+        return redirect(url_for("home"))
+    return render_template('place_order.html', form=form, sellers=sellers)

@@ -47,3 +47,13 @@ class EditProfileForm(FlaskForm):
     county = StringField('County', validators=[DataRequired()])
     phone_number = StringField('Phone number', validators=[DataRequired()])
     submit = SubmitField('submit')
+
+
+class PlaceOrderForm(FlaskForm):
+    id = StringField('Enter ID to place order', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class FilterSellersForm(FlaskForm):
+    county = StringField('Filter using county', validators=[DataRequired()])
+    submit = SubmitField('Submit')
