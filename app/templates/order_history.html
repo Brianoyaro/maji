@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+	{% if orders|length > 0 %}
+		<table>
+			<tr>
+				<th>Id</th>
+				<th>Purchaser Name</th>
+				<th>Purchaser Phone</th>
+				<th>Order Status</th>
+			</tr>
+			{% for order in orders %}
+			<tr>
+				<td>{{ order.id }}</td>
+				<td>{{ order.purchaser.username }}</td>
+				<td>{{ order.purchaser.phone_number }}</td>
+				{% if order.checked %}
+				<td><h5>Completed</h5></td>
+				{% else %}
+				<td><h5>pending</h5></td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<p><i>You have no orders yet</i></p>
+	{% endif %}
+{% endblock %}

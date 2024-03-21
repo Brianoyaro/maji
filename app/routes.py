@@ -50,7 +50,7 @@ def buyer():
 @login_required
 def seller():
     if current_user.is_authenticated:
-        orders = Order.query.filter_by(purchaser=current_user).all()
+        orders = Order.query.filter_by(seller=current_user).filter_by(checked=False).all()
         key = '994ee93c240c488cafd112500240103'
         location = current_user.county
         url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
@@ -65,7 +65,11 @@ def seller():
         flash("You have marked the order as completed")
     return render_template('sellers.html', title='Home Page', user=user, resp=resp, orders=orders, form=form)
 
-
+@app.route('/order_history')
+@login_required
+def order_history():
+    orders = Order.query.filter_by(seller=current_user).all()
+    return render_template('order_history.html', orders=orders)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -154,3 +158,16 @@ def place_order(county):
         flash("Order placed successfully")
         return redirect(url_for("home"))
     return render_template('place_order.html', form=form, sellers=sellers)
+
+
+@app.route('/delete_me')
+@login_required
+def delete_me():
+    if current_user.is_authenticated:
+        users = Users.query.all()
+        for user in users:
+            if user == current_user:
+                db.session.delete(user)
+                db.session.commit()
+                flash("Account Deleted Successfully")
+                return redirect(url_for("index"))
