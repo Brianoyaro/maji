@@ -114,12 +114,12 @@ def edit_profile():
 
 @app.route('/order/<county>', methods=['GET', 'POST'])
 @login_required
-def place_order(county=None):
-    if county:
-        sellers = Users.query.filter_by(type=2).filter_by(county=county).all()
-    if len(sellers) == 0:
+def place_order(county):
+    if county == 'all':
         sellers = Users.query.filter_by(type=2).all()
-    """else:
+    else:
+        sellers = Users.query.filter_by(type=2).filter_by(county=county).all()
+    """if len(sellers) == 0:
         sellers = Users.query.filter_by(type=2).all()"""
     form = PlaceOrderForm()
     if form.validate_on_submit():
