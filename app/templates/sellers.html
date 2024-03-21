@@ -1,2 +1,32 @@
 {% extends 'base.html' %}
-{% block content %}<h1>Sellers Page</h1>{% endblock %}
+{% block content %}
+	<h1>Seller's Page</h1>
+	<div style="display: inline-flex; justify-content: center; content-align: center; border: 1px solid black; background: #87CEEB; padding: 0px 40px">
+		<img src="{{ resp.get('current').get('condition').get('icon') }}">
+		<p><b>Hello</b> {{ user.username  }} the weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}</p>
+	</div>
+	<div>
+		<h3>Most recent orders</h3>
+		<ul>
+			{% if orders %}
+			{% for order in orders %}
+			<li>{{ order }}</li>
+			{% endfor %}
+			{% else %}
+			<p><i>You have no reccent orders</i></p>
+			{% endif %}
+		</ul>
+		<p>Completed an order? Enter the order ID below to tick it off.</p>
+		<form action='' method='post'>
+		{{ form.hidden_tag() }}
+		<p>
+			{{ form.id.label }}<br>
+			{{ form.id() }}<br>
+			{% for error in form.id.errors %}
+			<span style="color: red">{{ error }}</span>
+			{% endfor %}
+		</p>
+		<p>{{ form.submit() }}</p>
+		</form>
+	</div>
+{% endblock %}

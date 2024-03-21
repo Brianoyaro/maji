@@ -57,3 +57,8 @@ class PlaceOrderForm(FlaskForm):
 class FilterSellersForm(FlaskForm):
     county = StringField('Filter using county', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class CheckOrderForm(FlaskForm):
+    id = StringField('Id', validators=[DataRequired()])
+    submit = SubmitField('Submit')

@@ -26,6 +26,7 @@ class Users(UserMixin, db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    checked = db.Column(db.Boolean, default=False)
     buyer_name = db.Column(db.String(50), db.ForeignKey("users.username"))
     seller_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
