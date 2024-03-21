@@ -16,6 +16,7 @@
 		</tr>
 		{% endfor %}
 	</table>
+	<p>Want to see all vendors? <a href="{{ url_for("place_order", county="all") }}">show</a></p>
 	<form action='' method='post'>
 	{{ form.hidden_tag() }}
 	<p>
