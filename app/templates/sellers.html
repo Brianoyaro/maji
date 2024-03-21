@@ -6,7 +6,7 @@
 		<p><b>Hello</b> {{ user.username  }} the weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}</p>
 	</div>
 	<div>
-		<h3>Most recent orders</h3>
+		<h3> Pending Orders</h3>
 		<ul>
 			{% if orders %}
 			<table>

@@ -16,12 +16,12 @@ def index():
 @login_required
 def home():
     if current_user.is_authenticated:
-        orders = Order.query.filter_by(purchaser=current_user).all()
+        """orders = Order.query.filter_by(purchaser=current_user).all()
         key = '994ee93c240c488cafd112500240103'
         location = current_user.county
         url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
         resp = requests.get(url).json()
-        user = Users.query.filter_by(email=current_user.email).first()
+        user = Users.query.filter_by(email=current_user.email).first()"""
         if current_user.type == '1':
             # return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
             return redirect(url_for('buyer'))
@@ -163,6 +163,7 @@ def place_order(county):
 @app.route('/delete_me')
 @login_required
 def delete_me():
+    """
     if current_user.is_authenticated:
         users = Users.query.all()
         for user in users:
@@ -170,4 +171,8 @@ def delete_me():
                 db.session.delete(user)
                 db.session.commit()
                 flash("Account Deleted Successfully")
-                return redirect(url_for("index"))
+                return redirect(url_for("index"))"""
+    db.session.delete(current_user)
+    db.session.commit()
+    flash("Account successfully deleted")
+    return redirect(url_for("index"))
