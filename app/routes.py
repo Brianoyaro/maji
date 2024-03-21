@@ -124,7 +124,7 @@ def place_order(county):
     form = PlaceOrderForm()
     if form.validate_on_submit():
         purchaser = current_user
-        seller = Users.query.filter_by(id=int(form.id.data)).first_or_404()
+        seller = Users.query.filter_by(id=int(form.id.data)).filter_by(type=2).first_or_404()
         order = Order(purchaser=purchaser, seller=seller)
         db.session.add(order)
         db.session.commit()
