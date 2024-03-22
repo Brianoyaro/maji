@@ -9,15 +9,15 @@
 		<h3> Pending Orders</h3>
 		<ul>
 			{% if orders %}
-			<table>
+			<table class="table">
 				<tr>
-					<th>Id</th>
-					<th>Buyer Name</th>
-					<th>Buyer's Phone</th>
+					<th scope="col">Id</th>
+					<th scope="col">Buyer Name</th>
+					<th scope="col">Buyer's Phone</th>
 				</tr>
 				{% for order in orders %}
 				<tr>
-					<td>{{ order.id }}</td>
+					<td scope="row">{{ order.id }}</td>
 					<td>{{ order.purchaser.username }}</td>
 					<td>{{ order.purchaser.phone_number }}</td>
 				</tr>

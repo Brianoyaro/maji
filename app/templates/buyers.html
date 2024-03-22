@@ -7,15 +7,33 @@
 	</div>
 	<div>
 		<h3>Most recent orders</h3>
-		<ul>
-			{% if orders %}
+		{% if orders %}
+		<table class=table>
+			<tr>
+				<th scope="col">Id</th>
+				<th scope="col">Vendor</th>
+				<th scope="col">Vendor Contact</th>
+				<th scope="col">Vendor County</th>
+				<th scope="col">Status</th>
+			</tr>
 			{% for order in orders %}
-			<li>{{ order }}</li>
+			<tr>
+				<td scope="row">{{order.id }}</td>
+				<td>{{ order.seller.username }}</td>
+				<td>{{ order.seller.phone_number }}</td>
+				<td>{{ order.seller.county }}</td>
+				{% if order.checked %}
+				<td>Completed</td>
+				{% else %}
+				<td>Pending</td>
+				{% endif %}
+			</tr>
 			{% endfor %}
-			{% else %}
-			<p><i>You have no reccent orders</i></p>
-			{% endif %}
-		</ul>
+		</table>
+		{% else %}
+		<p><i>You have no reccent orders</i></p>
+		{% endif %}
+		<a href="{{ url_for("my_orders") }}">View all orders placed</a>
 		<p>Want to place a new order? <a href="{{ url_for("place_order", county=current_user.county) }}">Order Here</a>. You can narrow down your search by entering a filter county below:</p>
 		<form action='' method='post'>
 		{{ form.hidden_tag() }}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table">
+	<tr>
+		<th scope="col">Id</th>
+		<th scope="col">Vendor</th>
+		<th scope="col">Vendor Contact</th>
+		<th scope="col">Vendor County</th>
+		<th scope="col">Status</th>
+	</tr>
+	{% for order in orders %}
+	<tr>
+		<td scope="row">{{ order.id }}</td>
+		<td>{{ order.seller.username }}</td>
+		<td>{{ order.seller.phone_number }}</td>
+		<td>{{ order.seller.county }}</td>
+		{% if order.checked %}
+		<td>Completed</td>
+		{% else %}
+		<td>Pending</td>
+		{% endif %}
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

@@ -19,17 +19,7 @@
 			{% endfor %}
 		</ul>
 		{% endif %}
-		{% endwith %}<!--
-		<div>
-			{% if current_user.is_anonymous %}
-			<a href="{{ url_for("login") }}">Login</a>
-			<a href="{{ url_for("register") }}">Register</a>
-			{% else %}
-			<a href="{{ url_for("home") }}">Home</a>
-			<a href="{{ url_for("profile") }}">View Profile</a>
-			<a href="{{ url_for("logout") }}">Logout</a>
-			{% endif %}
-		</div>-->
+		{% endwith %}
 		<div class="container">
 		{% include 'nav.html' %}
 		<hr>
