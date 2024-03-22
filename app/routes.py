@@ -1,7 +1,7 @@
 import requests
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PlaceOrderForm, FilterSellersForm, CheckOrderForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PlaceOrderForm, FilterSellersForm, CheckOrderForm, DeleteOrdersForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import Users, Order
 
@@ -85,6 +85,8 @@ def login():
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         flash('Successfully logged in')
+        if user.email == 'admin@admin.com':
+            return redirect(url_for("admin"))
         """incase app redirected to /login because of @login_required"""
         next_page = request.args.get('next')
         if not next_page:
@@ -186,3 +188,59 @@ def delete_me():
 def my_orders():
     orders = Order.query.filter_by(purchaser=current_user).all()
     return render_template('my_orders.html', orders=orders)
+
+
+@app.route('/admin')
+@login_required
+def admin():
+    if current_user.email == 'admin@admin.com':
+        orders = Order.query.all()
+        users = Users.query.all()
+        # users.pop(0)
+        return render_template('admin.html', orders=orders, users=users)
+
+
+@app.route('/admin/orders/<id>')
+@login_required
+def delete_orders(id=None):
+    if current_user.email == 'admin@admin.com':
+        form = DeleteOrdersForm()
+        orders = Order.query.all()
+        if form.validate_on_submit():
+            for order in orders:
+                if order.id == int(form.id.data):
+                    db.session.delete(order)
+                    db.session.commit()
+                    flash("Order deleted")
+            return redirect(url_for('admin'))
+        if id == 'all':
+            for order in orders:
+                db.session.delete(order)
+            db.session.commit()
+            flash("All orders successfully deleted")
+            return redirect(url_for("admin"))
+        return render_template('delete_orders.html', form=form, orders=orders)
+    return redirect('home')
+
+@app.route('/admin/users/<id>')
+@login_required
+def delete_users(id):
+    if current_user.email == 'admin@admin.com':
+        form = DeleteOrdersForm()
+        users = Users.query.all()
+        if form.validate_on_submit():
+            for user in users:
+                if user.id == form.id.data and user != current_user:
+                    db.session.delete(user)
+                    db.session.commit()
+                    flash("User deleted")
+            return redirect(url_for('admin'))
+        if id == 'all':
+            users.pop(0)
+            for user in users:
+                db.session.delete(user)
+            db.session.commit()
+            flash("All users successfully deleted")
+            return redirect(url_for("admin"))
+        return render_template('delete_users.html', form=form, users=users)
+    return redirect('home')

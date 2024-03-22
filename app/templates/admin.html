@@ -3,18 +3,16 @@
 {% if orders|length > 0 %}
 <table class="table">
 	<tr>
-		<th scope="col">Id</th>
-		<th scope="col">Vendor</th>
-		<th scope="col">Vendor Contact</th>
-		<th scope="col">Vendor County</th>
+		<th scope="col">Order ID</th>
+		<th scope="col">Purchaser</th>
+		<th scope="col">Seller</th>
 		<th scope="col">Status</th>
 	</tr>
 	{% for order in orders %}
 	<tr>
 		<td scope="row">{{ order.id }}</td>
+		<td>{{ order.purchaser.username }}</td>
 		<td>{{ order.seller.username }}</td>
-		<td>{{ order.seller.phone_number }}</td>
-		<td>{{ order.seller.county }}</td>
 		{% if order.checked %}
 		<td>Completed</td>
 		{% else %}
@@ -23,7 +21,9 @@
 	</tr>
 	{% endfor %}
 </table>
+<p>Delete an order or all orders: <a href="{{ url_for("delete_orders", id="None") }}">Delete</a></p>
 {% else %}
-<p><i>No orders</i></p>
+<p><i>No orders to show</i></p>
 {% endif %}
+<p>View and modify users: <a href="{{ url_for("delete_users", id="None") }}">View</a>
 {% endblock %}

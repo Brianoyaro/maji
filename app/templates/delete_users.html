@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'view_users.html' %}
+<form action='' method="post">
+	{{ form.hidden_tag() }}
+	<p>
+		{{ form.id.label }}<br>
+		{{ form.id() }}<br>
+		{% for errror in errors %}
+		<span style="color: red">{{ error }}</span>
+		{% endfor %}
+	</p>
+	<p>{{ form.submit() }}</p>
+</form>
+<p>Want to delete all users? <a href="{{ url_for("delete_users", id="all") }}">Delete</a>
+{% endblock %}

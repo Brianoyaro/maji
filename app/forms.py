@@ -60,5 +60,10 @@ class FilterSellersForm(FlaskForm):
 
 
 class CheckOrderForm(FlaskForm):
-    id = StringField('Id', validators=[DataRequired()])
+    id = StringField('Enter Id', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class DeleteOrdersForm(FlaskForm):
+    id = StringField('Enter ID to delete', validators=[DataRequired()])
     submit = SubmitField('Submit')
