@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 	{% if sellers|length > 0 %}
-	<table>
+	<table class="table">
 		<tr>
-			<th>Id</th>
-			<th>Name</th>
-			<th>Phone Number</th>
-			<th>County</th>
+			<th scope="col">Id</th>
+			<th scope="col">Name</th>
+			<th scope="col">Phone Number</th>
+			<th scope="col">County</th>
 		</tr>
 		{% for seller in sellers %}
 		<tr>
-			<td>{{ seller.id }}</td>
+			<td scope="row">{{ seller.id }}</td>
 			<td>{{ seller.username }}</td>
 			<td>{{ seller.phone_number }}</td>
 			<td>{{ seller.county }}</td>
