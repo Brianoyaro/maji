@@ -190,10 +190,13 @@ def delete_me():
                 db.session.commit()
                 flash("Account Deleted Successfully")
                 return redirect(url_for("index"))"""
-    db.session.delete(current_user)
-    db.session.commit()
-    flash("Account successfully deleted")
-    return redirect(url_for("index"))
+    if current_user.email != 'admin@admin.com':
+        db.session.delete(current_user)
+        db.session.commit()
+        flash("Account successfully deleted")
+        return redirect(url_for("index"))
+    flash('Admin not deletable')
+    return redirect(url_for('profile'))
 
 
 @app.route('/me/orders')

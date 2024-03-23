@@ -3,7 +3,7 @@
 	<h1>Seller's Page</h1>
 	<div style="display: inline-flex; justify-content: center; content-align: center; border: 1px solid black; background: #87CEEB; padding: 0px 40px">
 		<img src="{{ resp.get('current').get('condition').get('icon') }}">
-		<p>Hello {{ user.username  }}<br> The weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}, {{ resp.get('current').get('temp_c') }} degrees Celcius</p>
+		<p>Hello {{ user.username  }}<br> The weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}, {{ resp.get('current').get('temp_c') }} &deg;C</p>
 	</div>
 	<div>
 		<h3> Pending Orders</h3>
