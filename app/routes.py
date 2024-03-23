@@ -200,9 +200,9 @@ def admin():
         return render_template('admin.html', orders=orders, users=users)
 
 
-@app.route('/admin/orders/<id>')
+@app.route('/admin/orders/<id>', methods=["GET", "POST"])
 @login_required
-def delete_orders(id=None):
+def delete_orders(id):
     if current_user.email == 'admin@admin.com':
         form = DeleteOrdersForm()
         orders = Order.query.all()
@@ -222,7 +222,7 @@ def delete_orders(id=None):
         return render_template('delete_orders.html', form=form, orders=orders)
     return redirect('home')
 
-@app.route('/admin/users/<id>')
+@app.route('/admin/users/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_users(id):
     if current_user.email == 'admin@admin.com':
@@ -230,10 +230,12 @@ def delete_users(id):
         users = Users.query.all()
         if form.validate_on_submit():
             for user in users:
-                if user.id == form.id.data and user != current_user:
+                if user.id == int(form.id.data) and user != current_user:
                     db.session.delete(user)
                     db.session.commit()
                     flash("User deleted")
+                if user.id == int(form.id.data) and user == current_user:
+                    flash("Admin not deletable")
             return redirect(url_for('admin'))
         if id == 'all':
             users.pop(0)
