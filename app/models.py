@@ -10,7 +10,7 @@ class Users(UserMixin, db.Model):
     county = db.Column(db.String(30))
     phone_number = db.Column(db.String(13))
     password_hash = db.Column(db.String(128))
-    type = db.Column(db.String(1))
+    type = db.Column(db.String(10))
     orderee = db.relationship("Order", foreign_keys='Order.buyer_name', backref='purchaser', lazy="dynamic")
     ordered_to = db.relationship("Order", foreign_keys='Order.seller_id', cascade="all, delete-orphan", backref='seller', lazy="dynamic")
 

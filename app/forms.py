@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 from app.models import Users
 
@@ -18,7 +18,7 @@ class RegistrationForm(FlaskForm):
     password2 = StringField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     phone_number = StringField('Phone number', validators=[DataRequired()])
     county = StringField('County', validators=[DataRequired()])
-    type = StringField('Type (1 for purchaser or 2 for seller)', validators=[DataRequired()])
+    type = RadioField('User Type', choices=[('buyer', 'Buyer'), ('seller', 'Seller')], validators=[DataRequired()])
     submit = SubmitField('register')
 
 
@@ -27,11 +27,6 @@ class RegistrationForm(FlaskForm):
         user = Users.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Please use a different email')
-
-
-    def validate_type(self, type):
-        if type.data not in ['1', '2']:
-            raise ValidationError('Use either 1 for purchaser or 2 for seller')
 
 
     def validate_phone_number(self, phone_number):

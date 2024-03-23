@@ -24,7 +24,7 @@ def home():
         url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
         resp = requests.get(url).json()
         user = Users.query.filter_by(email=current_user.email).first()"""
-        if current_user.type == '1':
+        if current_user.type == 'buyer':
             # return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
             return redirect(url_for('buyer'))
         else:
@@ -160,15 +160,15 @@ def edit_profile():
 def place_order(county):
     """if user wants to place an order, has functionality to filter users given a county"""
     if county == 'all':
-        sellers = Users.query.filter_by(type=2).all()
+        sellers = Users.query.filter_by(type="seller").all()
     else:
-        sellers = Users.query.filter_by(type=2).filter_by(county=county).all()
+        sellers = Users.query.filter_by(type="seller").filter_by(county=county).all()
     """if len(sellers) == 0:
         sellers = Users.query.filter_by(type=2).all()"""
     form = PlaceOrderForm()
     if form.validate_on_submit():
         purchaser = current_user
-        seller = Users.query.filter_by(id=int(form.id.data)).filter_by(type=2).first_or_404()
+        seller = Users.query.filter_by(id=int(form.id.data)).filter_by(type="seller").first_or_404()
         order = Order(purchaser=purchaser, seller=seller)
         db.session.add(order)
         db.session.commit()

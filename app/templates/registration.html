@@ -47,7 +47,9 @@
 		</p>
 		<p>
 			{{ form.type.label }}<br>
-			{{ form.type(size=1) }}<br>
+			{% for val in form.type %}
+				{{ val }} {{ val.label }}
+			{% endfor %}
 			{% for error in form.type.errors %}
 				<span style='color: red'>{{ error }}</span>
 			{% endfor %}
