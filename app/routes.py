@@ -9,12 +9,14 @@ from app.models import Users, Order
 @app.route('/')
 @app.route('/index')
 def index():
+    """entry page of wesite"""
     return render_template('index.html') # customize index to handle nuyers and sellers by making it uniues to each I suppose by current_user.type == 1 then buyers else seller
 
 
 @app.route('/home')
 @login_required
 def home():
+    """redirects a user to thier specific home page e.g buyer to /buyer and seller to /seller"""
     if current_user.is_authenticated:
         """orders = Order.query.filter_by(purchaser=current_user).all()
         key = '994ee93c240c488cafd112500240103'
@@ -33,11 +35,12 @@ def home():
 @app.route('/buyer', methods=['GET', 'POST'])
 @login_required
 def buyer():
+    """buyer section in website"""
     if current_user.is_authenticated:
         orders = Order.query.filter_by(purchaser=current_user).order_by(Order.id.desc()).limit(5).all()
         key = '994ee93c240c488cafd112500240103'
         location = current_user.county
-        url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
+        url = 'http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no'.format(key, location)
         resp = requests.get(url).json()
         user = Users.query.filter_by(email=current_user.email).first()
     form = FilterSellersForm()
@@ -49,6 +52,7 @@ def buyer():
 @app.route('/seller', methods=['GET', 'POST'])
 @login_required
 def seller():
+    """seller/vender section in website"""
     if current_user.is_authenticated:
         orders = Order.query.filter_by(seller=current_user).filter_by(checked=False).all()
         key = '994ee93c240c488cafd112500240103'
@@ -69,12 +73,14 @@ def seller():
 @app.route('/order_history')
 @login_required
 def order_history():
+    """if a seller/vendor wants to see all of their order in detail"""
     orders = Order.query.filter_by(seller=current_user).all()
     return render_template('order_history.html', orders=orders)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """login a user in the website"""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -87,6 +93,7 @@ def login():
         flash('Successfully logged in')
         if user.email == 'admin@admin.com':
             return redirect(url_for("admin"))
+
         """incase app redirected to /login because of @login_required"""
         next_page = request.args.get('next')
         if not next_page:
@@ -98,6 +105,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    """logout of application"""
     logout_user()
     flash('Successfully logged out')
     return redirect(url_for('index'))
@@ -105,6 +113,7 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """Registering new users"""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
@@ -121,6 +130,7 @@ def register():
 @app.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    """if user wants to see their profile section"""
     if current_user.is_authenticated:
         user = Users.query.filter_by(email=current_user.email).first()
         return render_template('profile.html',user=user, title='Profile Page')
@@ -129,6 +139,7 @@ def profile():
 @app.route('/edit/profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    """incase a user wants to modify their details in their profile"""
     form = EditProfileForm()
     if form.validate_on_submit():
         current_user.county = form.county.data
@@ -147,6 +158,7 @@ def edit_profile():
 @app.route('/order/<county>', methods=['GET', 'POST'])
 @login_required
 def place_order(county):
+    """if user wants to place an order, has functionality to filter users given a county"""
     if county == 'all':
         sellers = Users.query.filter_by(type=2).all()
     else:
@@ -168,6 +180,7 @@ def place_order(county):
 @app.route('/delete_me')
 @login_required
 def delete_me():
+    """incase a user wants to delete their account in profile page section"""
     """
     if current_user.is_authenticated:
         users = Users.query.all()
@@ -186,6 +199,7 @@ def delete_me():
 @app.route('/me/orders')
 @login_required
 def my_orders():
+    """incase purchaser wants to see a detailed view of all of their placed orders and their statuses"""
     orders = Order.query.filter_by(purchaser=current_user).all()
     return render_template('my_orders.html', orders=orders)
 
@@ -193,6 +207,7 @@ def my_orders():
 @app.route('/admin')
 @login_required
 def admin():
+    """handles admin view of web site"""
     if current_user.email == 'admin@admin.com':
         orders = Order.query.all()
         users = Users.query.all()
@@ -203,6 +218,7 @@ def admin():
 @app.route('/admin/orders/<id>', methods=["GET", "POST"])
 @login_required
 def delete_orders(id):
+    """delete an order given ID or all orders"""
     if current_user.email == 'admin@admin.com':
         form = DeleteOrdersForm()
         orders = Order.query.all()
@@ -225,6 +241,7 @@ def delete_orders(id):
 @app.route('/admin/users/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_users(id):
+    """delete a user given ID or all users except admin user"""
     if current_user.email == 'admin@admin.com':
         form = DeleteOrdersForm()
         users = Users.query.all()
