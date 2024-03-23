@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-	<h1>Seller's Page</h1>
-	<div class="text-bg-dark p-3">
+	<div class="text-bg-light p-3">
 		<img src="{{ resp.get('current').get('condition').get('icon') }}">
 		<p>Hello {{ user.username  }}<br> The weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}, {{ resp.get('current').get('temp_c') }} &deg;C</p>
 	</div>
 	<div>
-		<h3> Pending Orders</h3>
+		<h4> Pending Orders</h4><hr>
 		<ul>
 			{% if orders %}
 			<table class="table">
@@ -28,7 +27,7 @@
 			<p><i>You have no pending orders</i></p>
 			{% endif %}
 		</ul>
-		<p>Want to see order history? <a href="{{ url_for("order_history") }}">Click Here</a></p>
+		<p>Want to see order history? <a href="{{ url_for("order_history") }}" class="link-underline link-underline-opacity-0">Click Here</a></p>
 		<p>Completed an order? Enter the order ID below to tick it off.</p>
 		<form action='' method='post'>
 		{{ form.hidden_tag() }}
