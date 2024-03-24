@@ -4,13 +4,13 @@
 <form action='' method="post">
 	{{ form.hidden_tag() }}
 	<p>
-		{{ form.id.label }}<br>
-		{{ form.id() }}<br>
+		{{ form.id.label(class="form-label") }}<br>
+		{{ form.id(class="form-control") }}<br>
 		{% for errror in errors %}
-		<span style="color: red">{{ error }}</span>
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
 		{% endfor %}
 	</p>
-	<p>{{ form.submit() }}</p>
+	<p>{{ form.submit(class="btn btn-primary") }}</p>
 </form>
 <p>Want to delete all users? <a href="{{ url_for("delete_users", id="all") }}" class="link-underline link-underline-opacity-0">Delete</a>
 {% endblock %}

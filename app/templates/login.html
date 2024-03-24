@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="mx-auto p-2" style="width: 400px">
-	<h1>Sign In</h1>
+<div class="mx-auto p-2" style="max-width: 80%; width: 400px;">
+	<h3 class="text-center">Sign In</h3>
 	<form action='' method='post' novalidate>
 	{{ form.hidden_tag() }}
-	<p>
-		{{ form.email.label }}<br>
-		{{ form.email() }}
+	<div class="form-group">
+		{{ form.email.label(class="form-label") }}<br>
+		{{ form.email(class="form-control") }}
 		{% for error in form.email.errors %}
 			<div class="alert alert-danger" role="alert">{{ error }}</div>
 		{% endfor %}
-	</p>
-	<p>
-		{{ form.password.label }}</br>
-		{{ form.password(type="password") }}<br>
+	</div>
+	<div class="form-group">
+		{{ form.password.label(class="form-label") }}</br>
+		{{ form.password(type="password", class="form-control") }}<br>
 		{% for error in form.password.errors %}
 			<div class="alert alert-danger" role="alert">{{ error }}</div>
 		{% endfor %}
-	</p>
-	<p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-<p>{{ form.submit() }}</p>
+	</div>
+	<p>{{ form.remember_me(class="form-check-input") }} {{ form.remember_me.label(class="form-check-label") }}</p>
+	<p>{{ form.submit(class="btn btn-primary btn-block") }}</p>
 	</form>
 	<p>Need an account? <a href="{{ url_for('register') }}" class="text-decoration-none">Click to Register</a></p>
 </div>

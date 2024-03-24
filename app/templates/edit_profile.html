@@ -4,26 +4,26 @@
 	<form action='' method='post'>
 		{{ form.hidden_tag() }}
 		<p>
-			{{ form.username.label }}<br>
-			{{ form.username() }}<br>
+			{{ form.username.label(class="form-label") }}<br>
+			{{ form.username(class="form-control") }}<br>
 			{% for error in form.username.errors %}
-				<span style="color: red">{{ error }}</span>
+				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.county.label }}<br>
-			{{ form.county() }}<br>
+			{{ form.county.label(class="form-label") }}<br>
+			{{ form.county(class="form-control") }}<br>
 			{% for error in form.county.errors %}
-				<span style="color: red">{{ error }}</span>
+				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.phone_number.label }}<br>
-			{{ form.phone_number() }}<br>
+			{{ form.phone_number.label(class="form-label") }}<br>
+			{{ form.phone_number(class="form-control") }}<br>
 			{% for error in form.phone_number.errors %}
-				<span style="color: red">{{ error }}</span>
+				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
-		<p>{{ form.submit() }}</p>
+		<p>{{ form.submit(class="btn btn-primary") }}</p>
 	</form>
 {% endblock %}

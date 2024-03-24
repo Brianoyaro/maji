@@ -1,59 +1,61 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="mx-auto p-2" style="max-width: 80%; width: 600px">
 	<h1>Register Today</h1>
 	<form action='' method='post'>
 		{{ form.hidden_tag() }}
 		<p>
-			{{ form.username.label }}<br>
-			{{ form.username() }}<br>
+			{{ form.username.label(class="form-label") }}<br>
+			{{ form.username(class="form-control") }}<br>
 			{% for error in form.username.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.email.label }}<br>
-			{{ form.email() }}<br>
+			{{ form.email.label(class="form-label") }}<br>
+			{{ form.email(class="form-control") }}<br>
 			{% for error in form.email.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.password.label }}<br>
-			{{ form.password(type="password") }}<br>
+			{{ form.password.label(class="form-label") }}<br>
+			{{ form.password(class="form-control", type="password") }}<br>
 			{% for error in form.password.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.password2.label }}<br>
-			{{ form.password2(type="password") }}<br>
+			{{ form.password2.label(class="form-label") }}<br>
+			{{ form.password2(class="form-control", type="password") }}<br>
 			{% for error in form.password2.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.phone_number.label }}<br>
-			{{ form.phone_number(size=13) }}<br>
+			{{ form.phone_number.label(class="form-label") }}<br>
+			{{ form.phone_number(class="form-control", size=13) }}<br>
 			{% for error in form.phone_number.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.county.label }}<br>
-			{{ form.county() }}<br>
+			{{ form.county.label(class="form-label") }}<br>
+			{{ form.county(class="form-control") }}<br>
 			{% for error in form.county.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
-			{{ form.type.label }}<br>
+			{{ form.type.label(class="form-label") }}<br>
 			{% for val in form.type %}
-				{{ val }} {{ val.label }}
+				{{ val(class="form-check-input") }} {{ val.label(class="form-check-label") }}
 			{% endfor %}
 			{% for error in form.type.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
-		<p>{{ form.submit() }}</p>
+		<p>{{ form.submit(class="btn btn-primary") }}</p>
 	</form>
+</div>
 {% endblock %}
