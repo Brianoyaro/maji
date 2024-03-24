@@ -1,24 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="mx-auto p-2" style="width: 400px">
 	<h1>Sign In</h1>
 	<form action='' method='post' novalidate>
 	{{ form.hidden_tag() }}
-	<p>
+	<p class="mb-3">
 		{{ form.email.label }}<br>
 	 	{{ form.email() }}
 		{% for error in form.email.errors %}
-			<span style="color: red">{{ error }}</span>
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
 		{% endfor %}
 	</p>
-	<p>
+	<p class="mb-3">
 		{{ form.password.label }}</br>
 		{{ form.password() }}<br>
 		{% for error in form.password.errors %}
-			<span style="color: red">{{ error }}</span>
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
 		{% endfor %}
 	</p>
-	<p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-	<p>{{ form.submit() }}</p>
+	<p class="mb-3">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+	<p class="mb-3">{{ form.submit() }}</p>
 	</form>
 	<p>Need an account? <a href="{{ url_for('register') }}" class="link-underline link-underline-opacity-0">Click to Register</a></p>
+</div>
 {% endblock %}
