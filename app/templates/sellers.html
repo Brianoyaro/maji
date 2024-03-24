@@ -27,7 +27,7 @@
 			<p><i>You have no pending orders</i></p>
 			{% endif %}
 		</ul>
-		<p>Want to see order history? <a href="{{ url_for("order_history") }}" class="link-underline link-underline-opacity-0">Click Here</a></p>
+		<p>Want to see order history? <a href="{{ url_for("order_history") }}" class="text-decoration-none">Click Here</a></p>
 		<p>Completed an order? Enter the order ID below to tick it off.</p>
 		<form action='' method='post'>
 		{{ form.hidden_tag() }}
