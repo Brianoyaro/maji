@@ -19,14 +19,14 @@
 		</p>
 		<p>
 			{{ form.password.label }}<br>
-			{{ form.password() }}<br>
+			{{ form.password(type="password") }}<br>
 			{% for error in form.password.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>
 		<p>
 			{{ form.password2.label }}<br>
-			{{ form.password2() }}<br>
+			{{ form.password2(type="password") }}<br>
 			{% for error in form.password2.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
