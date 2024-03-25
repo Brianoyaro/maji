@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 from app.models import Users
 
@@ -61,4 +61,10 @@ class CheckOrderForm(FlaskForm):
 
 class DeleteOrdersForm(FlaskForm):
     id = StringField('Enter ID to delete', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class MessageForm(FlaskForm):
+    content = TextAreaField("message content", validators=[DataRequired()])
+    to = StringField("receiver", validators=[DataRequired()])
     submit = SubmitField('Submit')

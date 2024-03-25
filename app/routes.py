@@ -1,9 +1,9 @@
 import requests
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PlaceOrderForm, FilterSellersForm, CheckOrderForm, DeleteOrdersForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PlaceOrderForm, FilterSellersForm, CheckOrderForm, DeleteOrdersForm, MessageForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import Users, Order
+from app.models import Users, Order, Message
 
 
 @app.route('/')
@@ -266,3 +266,30 @@ def delete_users(id):
             return redirect(url_for("admin"))
         return render_template('delete_users.html', form=form, users=users)
     return redirect('home')
+
+
+@app.route('/inbox', methods=["GET", "POST"])
+@login_required
+def inbox():
+    form = MessageForm()
+    if form.validate_on_submit():
+        receiver = Users.query.filter_by(email=form.to.data).first_or_404()
+        message = Message(content=form.content.data, sender=current_user, receiver=receiver)
+        db.session.add(message)
+        db.session.commit()
+        flash("message sent")
+        return redirect("inbox")
+    messages = Message.query.filter_by(receiver=current_user).all()
+    return render_template('inbox.html', messages=messages, title="MyInbox", form=form)
+
+
+@app.route('/delete/messagei/<id>')
+@login_required
+def delete_message(id):
+    messages = Message.query.filter_by(receiver=current_user).all()
+    if id == "all":
+        for message in messages:
+            db.session.delete(message)
+        db.session.commit()
+        flash("You inbox has been deleted successfully")
+        return redirect(url_for('inbox'))

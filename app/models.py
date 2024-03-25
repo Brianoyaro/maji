@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -33,6 +34,17 @@ class Order(db.Model):
 
     def __repr__(self):
         return "{} placed an order to {}".format(self.purchaser.username, self.seller.username)#Debugging purposes
+
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    sender = db.relationship("Users", foreign_keys=[sender_id])
+    receiver = db.relationship("Users", foreign_keys=[receiver_id])
 
 
 @login.user_loader

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if messages|length > 0 %}
+<table class="table">
+	<tr>
+		<th>My Inbox</th>
+	</tr>
+	{% for message in messages %}
+	<!--<p>{{ message.sender.username }} says {{ message.content }} at {{ message.time }}</p>-->
+	<tr>
+		{% if message.sender.username == current_user.username %}
+		<td>From: Me</td>
+		{% else %}
+		<td>From: {{ message.sender.username }}</td>
+		{% endif %}
+		<td>Message: {{ message.content }}</td>
+		<td>Time: {{ message.time.strftime("%A %d %B %Y %H:%M:%S") }}</td>
+	</tr>
+	{% endfor %}
+</table>
+<a href="{{ url_for("delete_message", id="all") }}" class="text-decoration-none">Delete all messages</a>
+{% else %}
+	<p><i>No messages</i></p>
+{% endif %}
+<hr>
+<form action='' method="post">
+	{{ form.hidden_tag() }}
+	<p>
+		{{ form.to.label(class="form-label") }}<br>
+		{{ form.to(class="form-control") }}<br>
+		{% for error in form.to.errors %}
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
+		{% endfor %}
+	</p>
+	<p>
+		{{ form.content.label(class="form-label") }}<br>
+		{{ form.content(class="form-control") }}<br>
+		{% for error in form.content.errors %}
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
+		{% endfor %}
+	</p>
+	<p>{{ form.submit(class="btn btn-primary") }}</p>
+</form>
+{% endblock %}
