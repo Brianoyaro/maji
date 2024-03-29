@@ -5,7 +5,7 @@ from app.models import Users
 
 
 class LoginForm(FlaskForm):
-    email = StringField('email', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired(), Email()])
     password = StringField('password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('sign in')
@@ -38,7 +38,7 @@ class RegistrationForm(FlaskForm):
 
 
 class ResetRequestForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Submit")
 
 

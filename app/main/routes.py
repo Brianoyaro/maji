@@ -96,7 +96,15 @@ def profile():
         return render_template('profile.html',user=user, title='Profile Page', image=image)
 
 
+def delete_pic():
+    """deletes an image"""
+    if current_user.profile_pic != 'default.jpg':
+        old_pic = os.path.join(current_app.root_path + "/static/pictures/" + current_user.profile_pic)
+        os.remove(old_pic)
+
+
 def save_image(pic_data):
+    """saves uploaded image and deletes previous image if any"""
     _, fn_ext = os.path.splitext(pic_data.filename)
     random_hex = secrets.token_hex(8)
     filename = random_hex + fn_ext
@@ -107,6 +115,8 @@ def save_image(pic_data):
     i.save(picture_path)
     # the commented line below saves picture-as-is while 4 lines above create a thumbnail 125 by 125 pixels size
     """pic_data.save(picture_path)"""
+
+    delete_pic()
     return filename
 
 
@@ -159,6 +169,7 @@ def place_order(county):
 def delete_me():
     """incase a user wants to delete their account in profile page section"""
     if current_user.email != current_app.config['ADMIN_EMAIL']:
+        delete_pic()
         db.session.delete(current_user)
         db.session.commit()
         flash("Account successfully deleted")
