@@ -14,5 +14,23 @@
 	</div>
 
 	<a href="{{ url_for("main.edit_profile") }}" class="btn btn-info m-2">Edit Profile</a>
-	<a href="{{ url_for("main.delete_me") }}" class="btn btn-danger  m-2">Delete Account</a>
+	<a href="#" class="btn btn-danger  m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Account</a>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Delete Account</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Really want to delete account?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<a href="{{ url_for("main.delete_me") }}" class="btn btn-outline-danger">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
