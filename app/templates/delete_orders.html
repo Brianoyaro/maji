@@ -12,5 +12,5 @@
 	</p>
 	<p>{{ form.submit(class="btn btn-primary") }}</p>
 </form>
-<p>Want to delete all orders? <a href="{{ url_for("delete_orders", id="all") }}" class="link-underline link-underline-opacity-0">Delete</a>
+<p>Want to delete all orders? <a href="{{ url_for("main.delete_orders", id="all") }}" class="link-underline link-underline-opacity-0">Delete</a>
 {% endblock %}

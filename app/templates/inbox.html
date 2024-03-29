@@ -1,37 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href="{{ url_for("new_message") }}" class="btn btn-outline-info btn-sm">Write Message</a>
+<a href="{{ url_for("main.new_message") }}" class="btn btn-outline-info btn-sm">Write Message</a>
 <hr>
 {% if messages.items|length > 0 %}
-	{% for message in messages.items %}
-		<div style="display: flex; max-width: 80%" class="container mb-2"> 
-		<img class="rounded-circle" style="height: 40px; width: 40px;" src="{{ url_for("static", filename="pictures/" + message.sender.profile_pic) }}">
-			<div style="display: block; margin-left: 10px;">
-				<p>From: {{ message.sender.email }}<br>Time: {{ message.time.strftime("%A %d %B %Y") }}</p>
-				<p>{{ message.content }}</p>
-			</div>
-		</div>
-	{% endfor %}
+        {% for message in messages.items %}
+                <div style="display: flex; max-width: 80%" class="container mb-2"> 
+			<div> <img class="rounded-circle mt-1" style="height: 50px; width: 50px;" src="{{ url_for("static", filename="pictures/" + message.sender.profile_pic) }}"></div>
+                        <div style="display: block; margin-left: 10px;">
+                                <p>{{ message.sender.email }}<br>{{ message.time.strftime("%A %d %B %Y") }}</p>
+                                <p>{{ message.content }}</p>
+                        </div>
+                </div>
+        {% endfor %}
 {#{% if prev_url %}
-	<a href="{{ prev_url }}" class="btn btn-primary btn-sm m-1">Newer Messages</a>
+        <a href="{{ prev_url }}" class="btn btn-primary btn-sm m-1">Newer Messages</a>
 {% endif %}
 {% if next_url %}
-	<a href="{{ next_url }}" class="btn btn-primary btn-sm m-1">Older Messages</a>
-	{% endif %}#}
+        <a href="{{ next_url }}" class="btn btn-primary btn-sm m-1">Older Messages</a>
+        {% endif %}#}
 
 {% for num in messages.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
-	{% if num %}
-		{% if messages.page == num %}
-		<a href="{{ url_for("inbox", page=num) }}" class="btn btn-warning btn-sm">{{ num }}</a>
-		{% else %}
-		<a href="{{ url_for("inbox", page=num) }}" class="btn btn-info btn-sm">{{ num }}</a>
-		{% endif %}
-	{% else %}
-		...
-	{% endif %}
+        {% if num %}
+                {% if messages.page == num %}
+                <a href="{{ url_for("main.inbox", page=num) }}" class="btn btn-warning btn-sm">{{ num }}</a>
+                {% else %}
+                <a href="{{ url_for("main.inbox", page=num) }}" class="btn btn-info btn-sm">{{ num }}</a>
+                {% endif %}
+        {% else %}
+                ...
+        {% endif %}
 {% endfor %}
-<a href="{{ url_for("delete_message", id="all") }}" class="text-decoration-none btn btn-outline-danger btn-sm">Delete all messages</a>
+<a href="{{ url_for("main.delete_message", id="all") }}" class="text-decoration-none btn btn-outline-danger btn-sm">Delete all messages</a>
 {% else %}
-	<p><i>No messages</i></p>
+        <p><i>No messages</i></p>
 {% endif %}
 {% endblock %}

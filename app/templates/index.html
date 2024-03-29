@@ -2,6 +2,6 @@
 {% block content %}
 	<div class="mb-3" style="background-image: url('{{ url_for('static', filename='rock_ocean.jpg') }}'); background-position: center; background-size: cover; height: 60vh;"></div>
 	<p class="text-center">Welcome to Maji app. A destination haven for bringing water vendors and consumers together globally</p>
-	<p class="text-center">Have an acount? <a href="{{ url_for('login') }}" class="text-decoration-none">Login</a></p>
-	<p class="text-center">Need an account?<a href="{{ url_for('register') }}" class="text-decoration-none">Register Today</a></p>
+	<p class="text-center">Have an acount? <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Login</a></p>
+	<p class="text-center">Need an account?<a href="{{ url_for('auth.register') }}" class="text-decoration-none">Register Today</a></p>
 {% endblock %}

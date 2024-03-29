@@ -20,7 +20,7 @@
 	{% else %}
 		<p><i>There are no vendors in your location</i></p>
 	{% endif %}
-	<p>Want to see all vendors? <a href="{{ url_for("place_order", county="all") }}">show</a></p>
+	<p>Want to see all vendors? <a href="{{ url_for("main.place_order", county="all") }}">show</a></p>
 	<form action='' method='post'>
 	{{ form.hidden_tag() }}
 	<p>

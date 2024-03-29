@@ -1,4 +1,4 @@
-from app import app
+from flask import current_app
 from time import time
 import jwt
 from datetime import datetime
@@ -30,12 +30,12 @@ class Users(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def get_token(self, expires_sec=3600):
-        return jwt.encode({'user_id': self.id, 'expire_time': time() + expires_sec}, app.config['SECRET_KEY'], algorithm='HS256')
+        return jwt.encode({'user_id': self.id, 'expire_time': time() + expires_sec}, current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def check_token(token):
         try:
-            user_id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['user_id']
+            user_id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['user_id']
         except:
             return None
         return Users.query.get(user_id)

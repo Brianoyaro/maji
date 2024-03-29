@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if messages.items|length > 0 %}
+<table class="table">
+	<tr>
+		<th>My Inbox</th>
+	</tr>
+	{% for message in messages.items %}
+	<!--<p>{{ message.sender.username }} says {{ message.content }} at {{ message.time }}</p>-->
+	<tr>
+		{% if message.sender.username == current_user.username %}
+		<td>From: Me</td>
+		{% else %}
+		<td>From: {{ message.sender.username }}</td>
+		{% endif %}
+		<td>Message: {{ message.content }}</td>
+		<td>Time: {{ message.time.strftime("%A %d %B %Y %H:%M:%S") }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{#{% if prev_url %}
+	<a href="{{ prev_url }}" class="btn btn-primary btn-sm m-1">Newer Messages</a>
+{% endif %}
+{% if next_url %}
+	<a href="{{ next_url }}" class="btn btn-primary btn-sm m-1">Older Messages</a>
+	{% endif %}#}
+
+{% for num in messages.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+	{% if num %}
+		{% if messages.page == num %}
+		<a href="{{ url_for("main.inbox", page=num) }}" class="btn btn-warning btn-sm">{{ num }}</a>
+		{% else %}
+		<a href="{{ url_for("main.inbox", page=num) }}" class="btn btn-info btn-sm">{{ num }}</a>
+		{% endif %}
+	{% else %}
+		...
+	{% endif %}
+{% endfor %}
+<a href="{{ url_for("main.delete_message", id="all") }}" class="text-decoration-none btn btn-outline-danger btn-sm">Delete all messages</a>
+{% else %}
+	<p><i>No messages</i></p>
+{% endif %}
+<hr>
+<form action='' method="post">
+	{{ form.hidden_tag() }}
+	<p>
+		{{ form.to.label(class="form-label") }}<br>
+		{{ form.to(class="form-control") }}<br>
+		{% for error in form.to.errors %}
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
+		{% endfor %}
+	</p>
+	<p>
+		{{ form.content.label(class="form-label") }}<br>
+		{{ form.content(class="form-control") }}<br>
+		{% for error in form.content.errors %}
+			<div class="alert alert-danger" role="alert">{{ error }}</div>
+		{% endfor %}
+	</p>
+	<p>{{ form.submit(class="btn btn-primary") }}</p>
+</form>
+{% endblock %}
