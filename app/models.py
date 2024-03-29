@@ -1,3 +1,6 @@
+from app import app
+from time import time
+import jwt
 from datetime import datetime
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -12,8 +15,10 @@ class Users(UserMixin, db.Model):
     phone_number = db.Column(db.String(13))
     password_hash = db.Column(db.String(128))
     type = db.Column(db.String(10))
+    profile_pic = db.Column(db.String(40), nullable=False, default="default.jpg")
     orderee = db.relationship("Order", foreign_keys='Order.buyer_name', backref='purchaser', lazy="dynamic")
     ordered_to = db.relationship("Order", foreign_keys='Order.seller_id', cascade="all, delete-orphan", backref='seller', lazy="dynamic")
+
 
     def __repr__(self):
         return "Name [{}] County [{}] Phone [{}]".format(self.username, self.county, self.phone_number)
@@ -23,6 +28,17 @@ class Users(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_token(self, expires_sec=3600):
+        return jwt.encode({'user_id': self.id, 'expire_time': time() + expires_sec}, app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def check_token(token):
+        try:
+            user_id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['user_id']
+        except:
+            return None
+        return Users.query.get(user_id)
 
 
 class Order(db.Model):

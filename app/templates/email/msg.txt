@@ -1,0 +1,11 @@
+Dear {{ user.username }},
+
+Follow the link below to change your password
+
+{{ url_for('actual_password_reset', token=token, _external=True) }}
+
+Ignore this message if you did not request for the change
+
+Sincerely,
+
+Maji Team.

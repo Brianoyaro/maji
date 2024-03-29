@@ -1,17 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 <a href="{{ url_for("new_message") }}" class="btn btn-outline-info btn-sm">Write Message</a>
-<hr>
 {% if messages.items|length > 0 %}
+<table class="table">
+	<tr>
+		<th>My Inbox</th>
+	</tr>
 	{% for message in messages.items %}
-		<div style="display: flex; max-width: 80%" class="container mb-2"> 
-		<img class="rounded-circle" style="height: 40px; width: 40px;" src="{{ url_for("static", filename="pictures/" + message.sender.profile_pic) }}">
-			<div style="display: block; margin-left: 10px;">
-				<p>From: {{ message.sender.email }}<br>Time: {{ message.time.strftime("%A %d %B %Y") }}</p>
-				<p>{{ message.content }}</p>
-			</div>
-		</div>
+	<tr>
+		<img class="rounded-circle" style="height: 20px; width: 20px;" src="{{ url_for("static", filename="pictures/" + message.sender.profile_pic) }}">
+		{% if message.sender.username == current_user.username %}
+		<td>From: Me</td>
+		{% else %}
+		<td>From: {{ message.sender.username }}</td>
+		{% endif %}
+		<td>Message: {{ message.content }}</td>
+		<td>Time: {{ message.time.strftime("%A %d %B %Y") }}</td>
+	</tr>
 	{% endfor %}
+</table>
 {#{% if prev_url %}
 	<a href="{{ prev_url }}" class="btn btn-primary btn-sm m-1">Newer Messages</a>
 {% endif %}

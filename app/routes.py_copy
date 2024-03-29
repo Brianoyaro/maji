@@ -1,6 +1,6 @@
 from PIL import Image
 import secrets
-from flask_mail import Message as MG
+from flask_mail import Message
 import os
 import requests
 from werkzeug.utils import secure_filename
@@ -297,17 +297,6 @@ def delete_users(id):
 @app.route('/inbox', methods=["GET", "POST"])
 @login_required
 def inbox():
-    """messages = Message.query.filter_by(receiver=current_user).all()"""
-    page = request.args.get("page", 1, type=int)
-    messages = Message.query.filter_by(receiver=current_user).order_by(Message.id.desc()).paginate(page=page,per_page= 5, error_out=False)
-    next_url = url_for("inbox", page=messages.next_num) if messages.has_next else None
-    prev_url = url_for("inbox", page=messages.prev_num) if messages.has_prev else None
-    return render_template('inbox.html', messages=messages, title="MyInbox", next_url=next_url, prev_url=prev_url)
-
-
-@app.route('/new_message', methods=["GET", "POST"])
-@login_required
-def new_message():
     form = MessageForm()
     if form.validate_on_submit():
         receiver = Users.query.filter_by(email=form.to.data).first_or_404()
@@ -316,7 +305,12 @@ def new_message():
         db.session.commit()
         flash("message sent")
         return redirect("inbox")
-    return render_template("new_message.html", title="New Message", form=form)
+    """messages = Message.query.filter_by(receiver=current_user).all()"""
+    page = request.args.get("page", 1, type=int)
+    messages = Message.query.filter_by(receiver=current_user).order_by(Message.id.desc()).paginate(page=page,per_page= 5, error_out=False)
+    next_url = url_for("inbox", page=messages.next_num) if messages.has_next else None
+    prev_url = url_for("inbox", page=messages.prev_num) if messages.has_prev else None
+    return render_template('inbox.html', messages=messages, title="MyInbox", form=form, next_url=next_url, prev_url=prev_url)
 
 
 @app.route('/delete/message/<id>')
@@ -347,10 +341,25 @@ def reset_request():
 
 def reset_email(user):
     token = user.get_token()
-    msg = MG('Password Reset', sender=app.config['MAIL_USERNAME'], recipients=[user.email])
+    send_mail('Password Reset',
+              sender='brianoyaro2000@gmail.com',
+              recipients=['brianoyaro2000@gmail.com'],
+              text_body=render_template('email/msg.txt', user=user, token=token),
+              html_body=render_template('email/msg.html', user=user, token=token))
+
+def send_mail(subject, sender, recipients, text_body, html_body):
+    # msg = Message(subject, sender=sender, recipients=recipients)
+    """msg = Message(sender=sender, recipients=[recipients])
+    msg.body = text_body
+    msg.html = html_body
+    mail.send(msg)"""
+    msg = Message("Hello",
+                  sender="from@example.com",
+                  recipients=["to@example.com"])
+    """msg = Message('Password Reset', sender=app.config['MAIL_USERNAME'], recipients=[user.email])
     msg.body = render_template("email/msg.txt", user=user, token=token)
     msg.html = render_template("email/msg.html", user=user, token=token)
-    mail.send(msg)
+    mail.send(msg)"""
 
 @app.route('/password_reset/<token>', methods=["GET", "POST"])
 def actual_password_reset(token):
