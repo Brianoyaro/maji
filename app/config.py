@@ -9,3 +9,4 @@ class Config():
     MAIL_USERNAME = 'brianoyaro2000@gmail.com'
     MAIL_PASSWORD = 'ewxp kgic evyf lwmg'
     PER_PAGE = 10
+    ADMIN_EMAIL = 'admin@admin.com'

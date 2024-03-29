@@ -29,14 +29,14 @@ def home():
         url = "http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no".format(key, location)
         resp = requests.get(url).json()
         user = Users.query.filter_by(email=current_user.email).first()"""
-        if current_user.type == 'buyer':
+        if current_user.email == current_app.config['ADMIN_EMAIL']:
+            return redirect(url_for('main.admin'))
+        elif current_user.type == 'buyer':
             # return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
             return redirect(url_for('main.buyer'))
         elif current_user.type == 'seller':
             return redirect(url_for('main.seller'))
             # return render_template('sellers.html', title='Home Page', user=user, resp=resp)
-        else:
-            return redirect(url_for('main.admin'))
     return render_template('index.html')
 
 
@@ -158,7 +158,7 @@ def place_order(county):
 @login_required
 def delete_me():
     """incase a user wants to delete their account in profile page section"""
-    if current_user.email != 'admin@admin.com':
+    if current_user.email != current_app.config['ADMIN_EMAIL']:
         db.session.delete(current_user)
         db.session.commit()
         flash("Account successfully deleted")
@@ -179,7 +179,7 @@ def my_orders():
 @login_required
 def admin():
     """handles admin view of web site"""
-    if current_user.email == 'admin@admin.com':
+    if current_user.email == current_app.config['ADMIN_EMAIL']:
         orders = Order.query.all()
         users = Users.query.all()
         # users.pop(0)
@@ -190,7 +190,7 @@ def admin():
 @login_required
 def delete_orders(id):
     """delete an order given ID or all orders"""
-    if current_user.email == 'admin@admin.com':
+    if current_user.email == current_app.config['ADMIN_EMAIL']:
         form = DeleteOrdersForm()
         orders = Order.query.all()
         if form.validate_on_submit():
@@ -213,7 +213,7 @@ def delete_orders(id):
 @login_required
 def delete_users(id):
     """delete a user given ID or all users except admin user"""
-    if current_user.email == 'admin@admin.com':
+    if current_user.email == current_app.config['ADMIN_EMAIL']:
         form = DeleteOrdersForm()
         users = Users.query.all()
         if form.validate_on_submit():

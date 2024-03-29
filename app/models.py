@@ -18,6 +18,8 @@ class Users(UserMixin, db.Model):
     profile_pic = db.Column(db.String(40), nullable=False, default="default.jpg")
     orderee = db.relationship("Order", foreign_keys='Order.buyer_name', backref='purchaser', lazy="dynamic")
     ordered_to = db.relationship("Order", foreign_keys='Order.seller_id', cascade="all, delete-orphan", backref='seller', lazy="dynamic")
+    sender = db.relationship("Message", foreign_keys='Message.sender_id', cascade="all, delete-orphan", backref='sender', lazy='dynamic')
+    receiver = db.relationship("Message", foreign_keys='Message.receiver_id', cascade="all, delete-orphan", backref='receiver', lazy='dynamic')
 
 
     def __repr__(self):
@@ -59,8 +61,8 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    sender = db.relationship("Users", foreign_keys=[sender_id])
-    receiver = db.relationship("Users", foreign_keys=[receiver_id])
+    # sender = db.relationship("Users", foreign_keys=[sender_id], cascade="all, delete-orphan")
+    # receiver = db.relationship("Users", foreign_keys=[receiver_id], cascade="all, delete-orphan")
 
 
 @login.user_loader
