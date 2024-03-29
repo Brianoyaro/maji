@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 	<h1>Edit Profile</h1>
-	<form action='' method='post'>
+	<form action='' method='post' enctype='multipart/form-data'>
 		{{ form.hidden_tag() }}
 		<p>
 			{{ form.username.label(class="form-label") }}<br>
@@ -21,6 +21,13 @@
 			{{ form.phone_number.label(class="form-label") }}<br>
 			{{ form.phone_number(class="form-control") }}<br>
 			{% for error in form.phone_number.errors %}
+				<div class="alert alert-danger" role="alert">{{ error }}</div>
+			{% endfor %}
+		</p>
+		<p>
+			{{ form.profile_pic.label }}<br>
+			{{ form.profile_pic(class="form-control-file") }}<br>
+			{% for error in form.profile_pic.errors %}
 				<div class="alert alert-danger" role="alert">{{ error }}</div>
 			{% endfor %}
 		</p>

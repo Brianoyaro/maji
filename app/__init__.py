@@ -2,16 +2,33 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_mail import Mail
+from app.config import Config
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "ab6ad1c5-dce7-4109-81d5-a02b625ca46d"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(Config)
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-login = LoginManager(app)
-login.login_view = 'login'
+db = SQLAlchemy()
+migrate = Migrate()
+login = LoginManager()
+mail = Mail()
+login.login_view = 'auth.login'
 
-from app import routes, models, error
+def create_app(config=Config):
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login.init_app(app)
+    mail.init_app(app)
+
+    from app import models
+    from app.error import bp as error_bp
+    from app.main import bp as main_bp
+    from app.auth import bp as auth_bp
+
+    app.register_blueprint(error_bp)
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
+    return app

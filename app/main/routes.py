@@ -1,19 +1,24 @@
+from PIL import Image
+import secrets
+import os
 import requests
-from app import app, db
-from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PlaceOrderForm, FilterSellersForm, CheckOrderForm, DeleteOrdersForm, MessageForm
-from flask_login import current_user, login_user, logout_user, login_required
+from app import db
+from app.main import bp
+from flask import render_template, flash, redirect, url_for, request, current_app
+from app.main.forms import (EditProfileForm, 
+                       PlaceOrderForm, FilterSellersForm, CheckOrderForm, DeleteOrdersForm, MessageForm)
+from flask_login import current_user, login_required
 from app.models import Users, Order, Message
 
 
-@app.route('/')
-@app.route('/index')
+@bp.route('/')
+@bp.route('/index')
 def index():
     """entry page of wesite"""
-    return render_template('index.html') # customize index to handle nuyers and sellers by making it uniues to each I suppose by current_user.type == 1 then buyers else seller
+    return render_template('index.html')
 
 
-@app.route('/home')
+@bp.route('/home')
 @login_required
 def home():
     """redirects a user to thier specific home page e.g buyer to /buyer and seller to /seller"""
@@ -26,13 +31,16 @@ def home():
         user = Users.query.filter_by(email=current_user.email).first()"""
         if current_user.type == 'buyer':
             # return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders)
-            return redirect(url_for('buyer'))
-        else:
-            return redirect(url_for('seller'))
+            return redirect(url_for('main.buyer'))
+        elif current_user.type == 'seller':
+            return redirect(url_for('main.seller'))
             # return render_template('sellers.html', title='Home Page', user=user, resp=resp)
+        else:
+            return redirect(url_for('main.admin'))
+    return render_template('index.html')
 
 
-@app.route('/buyer', methods=['GET', 'POST'])
+@bp.route('/buyer', methods=['GET', 'POST'])
 @login_required
 def buyer():
     """buyer section in website"""
@@ -45,11 +53,11 @@ def buyer():
         user = Users.query.filter_by(email=current_user.email).first()
     form = FilterSellersForm()
     if form.validate_on_submit():
-        return redirect(url_for('place_order', county=form.county.data))
+        return redirect(url_for('main.place_order', county=form.county.data))
     return render_template('buyers.html', title='Home Page', user=user, resp=resp, orders=orders, form=form)
 
 
-@app.route('/seller', methods=['GET', 'POST'])
+@bp.route('/seller', methods=['GET', 'POST'])
 @login_required
 def seller():
     """seller/vender section in website"""
@@ -70,7 +78,7 @@ def seller():
     return render_template('sellers.html', title='Home Page', user=user, resp=resp, orders=orders, form=form)
 
 
-@app.route('/order_history')
+@bp.route('/order_history')
 @login_required
 def order_history():
     """if a seller/vendor wants to see all of their order in detail"""
@@ -78,76 +86,45 @@ def order_history():
     return render_template('order_history.html', orders=orders)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """login a user in the website"""
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        flash('Successfully logged in')
-        if user.email == 'admin@admin.com':
-            return redirect(url_for("admin"))
-
-        """incase app redirected to /login because of @login_required"""
-        next_page = request.args.get('next')
-        if not next_page:
-            next_page = url_for('home')
-        return redirect(next_page) 
-    return render_template("login.html", title="Login", form=form)
-
-
-@app.route('/logout')
-@login_required
-def logout():
-    """logout of application"""
-    logout_user()
-    flash('Successfully logged out')
-    return redirect(url_for('index'))
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    """Registering new users"""
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = Users(username=form.username.data, email=form.email.data, county=form.county.data, type=form.type.data, phone_number=form.phone_number.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash("Registeration completed")
-        return redirect(url_for('login'))
-    return render_template('registration.html', form=form, title='Registration Page')
-
-
-@app.route('/user/profile', methods=['GET', 'POST'])
+@bp.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     """if user wants to see their profile section"""
     if current_user.is_authenticated:
+        image = url_for("static", filename='pictures/' + current_user.profile_pic)
         user = Users.query.filter_by(email=current_user.email).first()
-        return render_template('profile.html',user=user, title='Profile Page')
+        return render_template('profile.html',user=user, title='Profile Page', image=image)
 
 
-@app.route('/edit/profile', methods=['GET', 'POST'])
+def save_image(pic_data):
+    _, fn_ext = os.path.splitext(pic_data.filename)
+    random_hex = secrets.token_hex(8)
+    filename = random_hex + fn_ext
+    picture_path = os.path.join(current_app.root_path, "static/pictures", filename)
+    image_size = (125, 125)
+    i = Image.open(pic_data)
+    i.thumbnail(image_size)
+    i.save(picture_path)
+    # the commented line below saves picture-as-is while 4 lines above create a thumbnail 125 by 125 pixels size
+    """pic_data.save(picture_path)"""
+    return filename
+
+
+@bp.route('/edit/profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     """incase a user wants to modify their details in their profile"""
     form = EditProfileForm()
     if form.validate_on_submit():
+        if form.profile_pic.data:
+            img_name = save_image(form.profile_pic.data)
+            current_user.profile_pic = img_name
         current_user.county = form.county.data
         current_user.username = form.username.data
         current_user.phone_number =form.phone_number.data
         db.session.commit()
         flash("Successfully updated profile")
-        return redirect(url_for('edit_profile'))
+        return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.county.data = current_user.county
         form.username.data = current_user.username
@@ -155,7 +132,7 @@ def edit_profile():
     return render_template('edit_profile.html', title='Profile Edit', form=form)
 
 
-@app.route('/order/<county>', methods=['GET', 'POST'])
+@bp.route('/order/<county>', methods=['GET', 'POST'])
 @login_required
 def place_order(county):
     """if user wants to place an order, has functionality to filter users given a county"""
@@ -173,33 +150,24 @@ def place_order(county):
         db.session.add(order)
         db.session.commit()
         flash("Order placed successfully")
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
     return render_template('place_order.html', form=form, sellers=sellers)
 
 
-@app.route('/delete_me')
+@bp.route('/delete_me')
 @login_required
 def delete_me():
     """incase a user wants to delete their account in profile page section"""
-    """
-    if current_user.is_authenticated:
-        users = Users.query.all()
-        for user in users:
-            if user == current_user:
-                db.session.delete(user)
-                db.session.commit()
-                flash("Account Deleted Successfully")
-                return redirect(url_for("index"))"""
     if current_user.email != 'admin@admin.com':
         db.session.delete(current_user)
         db.session.commit()
         flash("Account successfully deleted")
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
     flash('Admin not deletable')
-    return redirect(url_for('profile'))
+    return redirect(url_for('main.profile'))
 
 
-@app.route('/me/orders')
+@bp.route('/me/orders')
 @login_required
 def my_orders():
     """incase purchaser wants to see a detailed view of all of their placed orders and their statuses"""
@@ -207,7 +175,7 @@ def my_orders():
     return render_template('my_orders.html', orders=orders)
 
 
-@app.route('/admin')
+@bp.route('/admin')
 @login_required
 def admin():
     """handles admin view of web site"""
@@ -218,7 +186,7 @@ def admin():
         return render_template('admin.html', orders=orders, users=users)
 
 
-@app.route('/admin/orders/<id>', methods=["GET", "POST"])
+@bp.route('/admin/orders/<id>', methods=["GET", "POST"])
 @login_required
 def delete_orders(id):
     """delete an order given ID or all orders"""
@@ -231,17 +199,17 @@ def delete_orders(id):
                     db.session.delete(order)
                     db.session.commit()
                     flash("Order deleted")
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
         if id == 'all':
             for order in orders:
                 db.session.delete(order)
             db.session.commit()
             flash("All orders successfully deleted")
-            return redirect(url_for("admin"))
+            return redirect(url_for("main.admin"))
         return render_template('delete_orders.html', form=form, orders=orders)
-    return redirect('home')
+    return redirect('main.home')
 
-@app.route('/admin/users/<id>', methods=['GET', 'POST'])
+@bp.route('/admin/users/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_users(id):
     """delete a user given ID or all users except admin user"""
@@ -256,21 +224,21 @@ def delete_users(id):
                     flash("User deleted")
                 if user.id == int(form.id.data) and user == current_user:
                     flash("Admin not deletable")
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
         if id == 'all':
             users.pop(0)
             for user in users:
                 db.session.delete(user)
             db.session.commit()
             flash("All users successfully deleted")
-            return redirect(url_for("admin"))
+            return redirect(url_for("main.admin"))
         return render_template('delete_users.html', form=form, users=users)
-    return redirect('home')
+    return redirect(url_for('main.home'))
 
 
-@app.route('/inbox', methods=["GET", "POST"])
+@bp.route('/new_message', methods=["GET", "POST"])
 @login_required
-def inbox():
+def new_message():
     form = MessageForm()
     if form.validate_on_submit():
         receiver = Users.query.filter_by(email=form.to.data).first_or_404()
@@ -278,12 +246,21 @@ def inbox():
         db.session.add(message)
         db.session.commit()
         flash("message sent")
-        return redirect("inbox")
-    messages = Message.query.filter_by(receiver=current_user).all()
-    return render_template('inbox.html', messages=messages, title="MyInbox", form=form)
+        return redirect(url_for("main.inbox"))
+    return render_template("new_message.html", form=form, title="New Message")
+
+@bp.route('/inbox', methods=["GET", "POST"])
+@login_required
+def inbox():
+    """messages = Message.query.filter_by(receiver=current_user).all()"""
+    page = request.args.get("page", 1, type=int)
+    messages = Message.query.filter_by(receiver=current_user).order_by(Message.id.desc()).paginate(page=page,per_page= current_app.config['PER_PAGE'], error_out=False)
+    next_url = url_for("main.inbox", page=messages.next_num) if messages.has_next else None
+    prev_url = url_for("main.inbox", page=messages.prev_num) if messages.has_prev else None
+    return render_template('inbox.html', messages=messages, title="MyInbox", next_url=next_url, prev_url=prev_url)
 
 
-@app.route('/delete/messagei/<id>')
+@bp.route('/delete/messagei/<id>')
 @login_required
 def delete_message(id):
     messages = Message.query.filter_by(receiver=current_user).all()
@@ -292,4 +269,4 @@ def delete_message(id):
             db.session.delete(message)
         db.session.commit()
         flash("You inbox has been deleted successfully")
-        return redirect(url_for('inbox'))
+        return redirect(url_for('main.inbox'))

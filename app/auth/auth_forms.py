@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, TextAreaField
+from wtforms import StringField, BooleanField, SubmitField, RadioField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 from app.models import Users
 
@@ -37,34 +37,12 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Phone number too long')
 
 
-class EditProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    county = StringField('County', validators=[DataRequired()])
-    phone_number = StringField('Phone number', validators=[DataRequired()])
-    submit = SubmitField('submit')
+class ResetRequestForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
 
-class PlaceOrderForm(FlaskForm):
-    id = StringField('Enter ID to place order', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
-class FilterSellersForm(FlaskForm):
-    county = StringField('Filter using county', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
-class CheckOrderForm(FlaskForm):
-    id = StringField('Enter Id', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
-class DeleteOrdersForm(FlaskForm):
-    id = StringField('Enter ID to delete', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
-class MessageForm(FlaskForm):
-    content = TextAreaField("message content", validators=[DataRequired()])
-    to = StringField("receiver", validators=[DataRequired()])
-    submit = SubmitField('Submit')
+class ActualRequestForm(FlaskForm):
+    password = StringField("Password", validators=[DataRequired()])
+    password2 = StringField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
+    submit = SubmitField("Submit")
