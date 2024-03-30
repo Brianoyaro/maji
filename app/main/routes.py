@@ -2,7 +2,8 @@ from PIL import Image
 import secrets
 import os
 import requests
-from app import db
+from flask_mail import Message as MG
+from app import db, mail
 from app.main import bp
 from flask import render_template, flash, redirect, url_for, request, current_app
 from app.main.forms import (EditProfileForm, 
@@ -160,6 +161,11 @@ def place_order(county):
         db.session.add(order)
         db.session.commit()
         flash("Order placed successfully")
+
+        msg = MG("New Order", sender=current_app.config["MAIL_USERNAME"], recipients=[seller.email])
+        msg.body = """You have received a new order. Kindly log in to check it out.'\n\nSincerely,\nMaji App"""
+        mail.send(msg)
+
         return redirect(url_for("main.home"))
     return render_template('place_order.html', form=form, sellers=sellers)
 

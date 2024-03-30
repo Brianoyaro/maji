@@ -5,7 +5,9 @@
 	<p class="text-center">Welcome to Maji app. A destination haven for bringing water vendors and consumers together globally</p>
 	{#<p class="text-center">Have an acount? <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Login</a></p>
 	<p class="text-center">Need an account?<a href="{{ url_for('auth.register') }}" class="text-decoration-none">Register Today</a></p>#}
-	<center><h3 style="margin-bottom: 30px">Features</h3></center>
+	<center><p><a style="margin: 0 40px" href="{{ url_for('auth.login') }}" class="text-decoration-none btn btn-outline-info">Login</a><a href="{{ url_for('auth.register') }}" class="text-decoration-none btn btn-outline-info">Register</a></p></center>
+	<hr>
+	<center><h3 class="text-success-emphasis" style="margin: 20px 0">Features</h3></center>
 	<div>
 		<h5 class="text-center">Secure Messaging</h5>
 		<center><img src="{{ url_for('static', filename='maji_messages.png') }}" class="mb-3" style="width: 80%; height: 80%;"></center>
