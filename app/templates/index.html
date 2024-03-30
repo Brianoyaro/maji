@@ -1,7 +1,29 @@
 {% extends "base.html"  %}
 {% block content %}
+<div style="backround-color: gray; font-family: Helvetica,Arial, sans-serif; line-height: 2rem">
 	<div class="mb-3" style="background-image: url('{{ url_for('static', filename='rock_ocean.jpg') }}'); background-position: center; background-size: cover; height: 60vh;"></div>
 	<p class="text-center">Welcome to Maji app. A destination haven for bringing water vendors and consumers together globally</p>
-	<p class="text-center">Have an acount? <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Login</a></p>
-	<p class="text-center">Need an account?<a href="{{ url_for('auth.register') }}" class="text-decoration-none">Register Today</a></p>
+	{#<p class="text-center">Have an acount? <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Login</a></p>
+	<p class="text-center">Need an account?<a href="{{ url_for('auth.register') }}" class="text-decoration-none">Register Today</a></p>#}
+	<center><h3 style="margin-bottom: 30px">Features</h3></center>
+	<div>
+		<h5 class="text-center">Secure Messaging</h5>
+		<center><img src="{{ url_for('static', filename='maji_messages.png') }}" class="mb-3" style="width: 80%; height: 80%;"></center>
+		<p class="text-center">Packed with a nice user friendly messaging system, MajiApp will connect you to your potential customer or vendor with a secure messaging platform visible only to target parties. Messaging has never been easier!</p>
+	</div>
+	<div>
+		<h5 class="text-center">User friendly ordering</h5>
+		<center><img src="{{ url_for('static', filename='maji_order.png') }}" class="mb-3" style="width: 80%; height: 80%;"></center>
+		<p class="text-center">Ordering at Maji is as simple as clicking a button and you'll have water at your doorstep. Similary, vendors have a nice order tarcking interface showing status of orders which in turn helps them prioritize their services by preventing backlogs.</p>
+	</div>
+	<div>
+		<h5 class="text-center">About</h5>
+		<p class="text-center">Maji App came as an inspiration to water problem I faced in Mombasa, Kenya. Other options and avenues of aquiring water became a tough nut to crack. Most local vendor storage outlets had run out of water. The only option left was to search through the internet for contacts of water vendors. Fast forward, how about creating an application where those in need of water are connected to those who provide the water services. Maji incorporated a messaging feature so that potential buyers inquire from prospective vendors of how much they charge, provide feedback to vendors on how they may improve their services better and much more. It came as a perfect time when we were to build our projects for <a class="text-decoration-none" href="https://www.holbertonschool.com">Holberton School</a>. Instead of To-Do lists, I opted to solve a real world problem connecting water to homes through the power of technology</p>
+		<h5 class="text-center">Contacts</h5>
+	</div>
+	<center>
+		<a href="https://www.twitter.com/BrianOyaro9" class="text-decoration-none">Twitter</a>
+		<a href="https://www.github.com/Brianoyaro/Maji" class="text-decoration-none">Github</a>
+	</center>
+</div>
 {% endblock %}
