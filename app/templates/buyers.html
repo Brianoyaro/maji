@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-	<div class="text-bg-light p-3">
-		<img src="{{ resp.get('current').get('condition').get('icon') }}">
-		<p>Hello {{ user.username  }}<br>The weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}, {{ resp.get('current').get('temp_c') }} &deg;C</p>
-	</div>
+{% include 'weather_forecast.html' %}
 	<div>
 		<h4>Most recent orders</h4><hr>
 		{% if orders %}
@@ -29,11 +26,12 @@
 			</tr>
 			{% endfor %}
 		</table>
-		<a href="{{ url_for("main.my_orders") }}" class="text-decoration-none">View all orders placed</a>
+		<a href="{{ url_for("main.my_orders") }}" class="text-decoration-none btn btn-outline-info m-2">View all orders placed</a>
 		{% else %}
 		<p><i>You have no reccent orders</i></p>
 		{% endif %}
-		<p>Want to place a new order? <a href="{{ url_for("main.place_order", county=current_user.county) }}" class="text-decoration-none">Order Here</a>. You can narrow down your search by entering a filter county below:</p>
+		<p>Ready to place your order? Click below to start. Need to refine your search? Enter your county in the filter box:</p>
+		<a href="{{ url_for("main.place_order", county=current_user.county) }}" class="btn btn-outline-info btn-sm">Order Now</a>
 		<form action='' method='post'>
 		{{ form.hidden_tag() }}
 		<p>

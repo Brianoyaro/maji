@@ -84,7 +84,7 @@ def seller():
 def order_history():
     """if a seller/vendor wants to see all of their order in detail"""
     orders = Order.query.filter_by(seller=current_user).all()
-    return render_template('order_history.html', orders=orders)
+    return render_template('order_history.html', title="my_orders", orders=orders)
 
 
 @bp.route('/user/profile', methods=['GET', 'POST'])
@@ -167,7 +167,7 @@ def place_order(county):
         mail.send(msg)
 
         return redirect(url_for("main.home"))
-    return render_template('place_order.html', form=form, sellers=sellers)
+    return render_template('place_order.html', form=form, sellers=sellers, title="Order")
 
 
 @bp.route('/delete_me')
@@ -189,7 +189,7 @@ def delete_me():
 def my_orders():
     """incase purchaser wants to see a detailed view of all of their placed orders and their statuses"""
     orders = Order.query.filter_by(purchaser=current_user).all()
-    return render_template('my_orders.html', orders=orders)
+    return render_template('my_orders.html', orders=orders, title="My Orders")
 
 
 @bp.route('/admin')
@@ -274,7 +274,7 @@ def inbox():
     messages = Message.query.filter_by(receiver=current_user).order_by(Message.id.desc()).paginate(page=page,per_page= current_app.config['PER_PAGE'], error_out=False)
     next_url = url_for("main.inbox", page=messages.next_num) if messages.has_next else None
     prev_url = url_for("main.inbox", page=messages.prev_num) if messages.has_prev else None
-    return render_template('inbox.html', messages=messages, title="MyInbox", next_url=next_url, prev_url=prev_url)
+    return render_template('inbox.html', messages=messages, title="My Inbox", next_url=next_url, prev_url=prev_url)
 
 
 @bp.route('/delete/messagei/<id>')

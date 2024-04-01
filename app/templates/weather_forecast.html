@@ -1,0 +1,4 @@
+<div class="text-bg-light p-3 d-flex">
+	<img src="{{ resp.get('current').get('condition').get('icon') }}" class="rounded-circle">
+	<p style="margin-left: 2rem;">Hello <b>{{ user.username  }}</b><br>The weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}, {{ resp.get('current').get('temp_c') }} &deg;C</p>
+</div>

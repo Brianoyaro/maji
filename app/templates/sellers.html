@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-	<div class="text-bg-light p-3">
-		<img src="{{ resp.get('current').get('condition').get('icon') }}">
-		<p>Hello {{ user.username  }}<br> The weather today at {{ resp.get('location').get('name') }} is {{ resp.get('current').get('condition').get('text') }}, {{ resp.get('current').get('temp_c') }} &deg;C</p>
-	</div>
+{% include 'weather_forecast.html' %}
 	<div>
 		<h4> Pending Orders</h4><hr>
-		<ul>
 			{% if orders %}
 			<table class="table">
 				<tr>
@@ -24,11 +20,11 @@
 				{% endfor %}
 			</table>
 			{% else %}
-			<p><i>You have no pending orders</i></p>
+				<p><i>You have no pending orders</i></p>
 			{% endif %}
-		</ul>
-		<p>Want to see order history? <a href="{{ url_for("main.order_history") }}" class="text-decoration-none">Click Here</a></p>
-		<p>Completed an order? Enter the order ID below to tick it off.</p>
+		<p>Want to view your order history? Click below.</p>
+		<a href="{{ url_for("main.order_history") }}" class="btn btn-sm btn-outline-info mb-2">Click Here</a>
+		<p class="pt-2">Already completed an order? Enter the order ID below to mark it as fulfilled.</p>
 		<form action='' method='post'>
 		{{ form.hidden_tag() }}
 		<p>
