@@ -14,7 +14,7 @@ class EditProfileForm(FlaskForm):
     submit = SubmitField('submit')
     
     def validate_phone_number(self, phone_number):
-        """ensures user enters right format for a phone number"""
+        """ensures user enters the right format for a phone number"""
         for val in phone_number.data:
             if val not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 raise ValidationError('Invalid phone number')
