@@ -16,7 +16,7 @@ First, clone this repo on your local machine. Next, install the necesarry depend
 
 ### Related Projects
 ---
---* [Simple shell](https://github.com/Brianoyaro/simple_shell) : a custom command line interpretor similar to bash shell
+[Simple shell](https://github.com/Brianoyaro/simple_shell) : a custom command line interpretor similar to bash shell
 
 ### Licensing
 ---
