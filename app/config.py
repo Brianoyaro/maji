@@ -1,4 +1,5 @@
 class Config():
+    """configs"""
     SECRET_KEY = "ab6ad1c5-dce7-4109-81d5-a02b625ca46d"
     SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
