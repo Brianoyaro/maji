@@ -5,6 +5,7 @@ from app.models import Users
 
 
 class LoginForm(FlaskForm):
+    """Login form"""
     email = StringField('email', validators=[DataRequired(), Email()])
     password = StringField('password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
@@ -12,6 +13,7 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    """registration form"""
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = StringField('Password', validators=[DataRequired()])
@@ -30,6 +32,7 @@ class RegistrationForm(FlaskForm):
 
 
     def validate_phone_number(self, phone_number):
+        """ensure user typed corect phone number"""
         for val in phone_number.data:
             if val not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 raise ValidationError('Invalid phone number')
@@ -38,11 +41,13 @@ class RegistrationForm(FlaskForm):
 
 
 class ResetRequestForm(FlaskForm):
+    """form for requesting password change"""
     email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Submit")
 
 
 class ActualRequestForm(FlaskForm):
+    """form which receives user password update during password reset"""
     password = StringField("Password", validators=[DataRequired()])
     password2 = StringField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
     submit = SubmitField("Submit")
