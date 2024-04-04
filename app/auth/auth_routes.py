@@ -57,6 +57,7 @@ def register():
 
 
 def reset_email(user):
+    """sends e-mail to user with password update link"""
     token = user.get_token()
     msg = MG(subject="Password Reset", sender=current_app.config["MAIL_USERNAME"], recipients=[user.email])
     msg.body = render_template("email/msg.txt", user=user, token=token)
@@ -77,6 +78,7 @@ def reset_email(user):
 
 @bp.route('/reset_request', methods=["GET", "POST"])
 def reset_request():
+    """when user requests for a password reset"""
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
     form = ResetRequestForm()
@@ -91,6 +93,7 @@ def reset_request():
 
 @bp.route('/password_reset/<token>', methods=["GET", "POST"])
 def actual_password_reset(token):
+    """actual password request if user and token are both valid"""
     user = Users.check_token(token)
     if user is None:
         flash("Invalid/expired token")
