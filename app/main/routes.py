@@ -162,6 +162,7 @@ def place_order(county):
         db.session.commit()
         flash("Order placed successfully")
 
+        """sends an e-mail a seller informing them they received a new order"""
         msg = MG("New Order", sender=current_app.config["MAIL_USERNAME"], recipients=[seller.email])
         msg.body = """You have received a new order. Kindly log in to check it out.'\n\nSincerely,\nMaji App"""
         mail.send(msg)
@@ -256,6 +257,7 @@ def delete_users(id):
 @bp.route('/new_message', methods=["GET", "POST"])
 @login_required
 def new_message():
+  """receives message input from a user"""
     form = MessageForm()
     if form.validate_on_submit():
         receiver = Users.query.filter_by(email=form.to.data).first_or_404()
@@ -280,6 +282,7 @@ def inbox():
 @bp.route('/delete/messagei/<id>')
 @login_required
 def delete_message(id):
+  """deletes a message using message id"""
     messages = Message.query.filter_by(receiver=current_user).all()
     if id == "all":
         for message in messages:
