@@ -16,7 +16,7 @@ First, clone this repo on your local machine. Next, install the necesarry depend
 
 ### Related Projects
 ---
---*[Simple shell](https://github.com/Brianoyaro/simple_shell) : a custom command line interpretor similar to bash shell
+--* [Simple shell](https://github.com/Brianoyaro/simple_shell) : a custom command line interpretor similar to bash shell
 
 ### Licensing
 ---
@@ -25,22 +25,18 @@ MIT license
 ### Features
 ---
 #### 1) Secure messaging
----
 
 Maji incorpiorates a secure messaging feature where only parties of interest/intended recipients see the particular message. With this feature, a vendor and customer may communicate securely amongst themselves. A customer may also proide feedback to the vendor on how to improve their services which in turn improves service delivery.
 
 #### 2) Easy to use ordering scheme
----
 
 Customers can order easily just by the tap of a button, they have the option of sifting through available vendors to find those closest to them.
 
 #### 3) Nice UI
----
 
 Vendors have a nice UI where they get to see pending orders. After fulfilling an order, they have the option of marking it as fulfilled which in turn removes the message from pending messages queue list.
 
 #### 4) Notifications
----
 
 Vendors are notified immediately an order is placed through e-mail which improves round time for service delivery.
 
