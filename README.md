@@ -21,5 +21,4 @@ Vendors are notified immediately an order is placed through e-mail which iproves
 
 Team
 
-Maji app was written by Brian Mokua - [@brianoyaro9][1]
-[1]: https://twitter.com/Brianoyaro9 "@brianoyaro9"
+Maji app was written by Brian Mokua - https://twitter.com/Brianoyaro9
